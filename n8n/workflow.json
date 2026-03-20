@@ -1,0 +1,122 @@
+{
+  "name": "ArcVault Triage Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "arcvault-triage",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8000/process",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "source",  "value": "={{ $json.source }}" },
+            { "name": "message", "value": "={{ $json.message }}" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-process",
+      "name": "Call Triage API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.routing.escalation_flag }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "if-escalation",
+      "name": "Check Escalation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "status", "value": "ESCALATED" },
+            { "name": "queue",  "value": "={{ $json.routing.queue }}" },
+            { "name": "reason", "value": "={{ $json.routing.escalation_reason }}" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-escalated",
+      "name": "Mark Escalated",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [1000, 200]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "status", "value": "NORMAL" },
+            { "name": "queue",  "value": "={{ $json.routing.queue }}" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-normal",
+      "name": "Mark Normal",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [1000, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "Call Triage API",   "type": "main", "index": 0 }]]
+    },
+    "Call Triage API": {
+      "main": [[{ "node": "Check Escalation", "type": "main", "index": 0 }]]
+    },
+    "Check Escalation": {
+      "main": [
+        [{ "node": "Mark Escalated", "type": "main", "index": 0 }],
+        [{ "node": "Mark Normal",    "type": "main", "index": 0 }]
+      ]
+    },
+    "Mark Escalated": {
+      "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]]
+    },
+    "Mark Normal": {
+      "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "arcvault-v1"
+}
