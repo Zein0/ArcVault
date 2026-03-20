@@ -137,8 +137,6 @@ The Python backend is identical. n8n provides visual orchestration and webhook m
 
 **2. Feedback loop into the prompt.** Collect confirmed overrides from the review UI and automatically inject the 5 most recent corrections as few-shot examples in `classify.txt`. This lets the prompt improve without any model retraining — just better context.
 
-**3. Typed entity extraction.** The current `entities` field is a flat string array (`["403", "$1,240"]`). I'd change `enrich.txt` to return typed objects: `[{"type": "error_code", "value": "403"}, {"type": "amount", "value": 1240}]`. This makes downstream filtering and alerting possible without regex on free text.
+**3. Semantic escalation detection.** The current keyword list is exact-match only — it misses typos ("ouatge"), synonyms ("all accounts down"), and paraphrases ("nobody can log in"). I'd replace the hardcoded array with a small embedding-based similarity check: encode the message and compare it against a set of canonical escalation phrases using cosine similarity. This catches the intent, not just the literal string.
 
-**4. Multi-language support.** Add a language detection step before classification. Route non-English messages to a translation layer first, then through the same pipeline. Most LLMs handle this natively but explicit detection prevents silent degradation on mixed-language inputs.
-
-**5. Confidence calibration.** The current self-reported confidence scores are not well-calibrated. I'd run the pipeline on 100 labelled examples, plot confidence vs. actual accuracy, and set the escalation threshold empirically rather than using the arbitrary 0.70 default.
+**4. Confidence calibration.** The current self-reported confidence scores are not well-calibrated. I'd run the pipeline on 100 labelled examples, plot confidence vs. actual accuracy, and set the escalation threshold empirically rather than using the arbitrary 0.70 default.
