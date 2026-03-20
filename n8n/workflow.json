@@ -17,12 +17,14 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://localhost:8000/process",
+        "url": "http://127.0.0.1:8000/process",
         "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "keypair",
         "bodyParameters": {
           "parameters": [
-            { "name": "source",  "value": "={{ $json.source }}" },
-            { "name": "message", "value": "={{ $json.message }}" }
+            { "name": "source",  "value": "={{ $json.body.source }}" },
+            { "name": "message", "value": "={{ $json.body.message }}" }
           ]
         },
         "options": {}
