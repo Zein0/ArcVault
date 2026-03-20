@@ -1,0 +1,157 @@
+[
+  {
+    "input": {
+      "source": "Email",
+      "message": "Hi, I tried logging in this morning and keep getting a 403 error. My account is arcvault.io/user/jsmith. This started after your update last Tuesday."
+    },
+    "classification": {
+      "category": "Incident/Outage",
+      "priority": "High",
+      "confidence": 0.95,
+      "reasoning": "The user is experiencing a 403 error when trying to log in, indicating a service outage that affects access to their account."
+    },
+    "enrichment": {
+      "core_issue": "User is experiencing a 403 error when trying to log in after a recent update.",
+      "entities": [
+        "403",
+        "arcvault.io/user/jsmith",
+        "last Tuesday"
+      ],
+      "urgency_signal": "high",
+      "summary": "The user is unable to log in due to a 403 error, which began occurring after the last update. Immediate attention is required to investigate the cause of this issue and restore access for the user."
+    },
+    "routing": {
+      "queue": "Engineering",
+      "escalation_flag": false,
+      "escalation_reason": null
+    },
+    "metadata": {
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "pipeline_version": "1.0.0",
+      "processed_at": "2026-03-20T20:02:22.571756Z"
+    }
+  },
+  {
+    "input": {
+      "source": "Web Form",
+      "message": "We'd love to see a bulk export feature for our audit logs. We're a compliance-heavy org and this would save us hours every month."
+    },
+    "classification": {
+      "category": "Feature Request",
+      "priority": "Low",
+      "confidence": 0.9,
+      "reasoning": "The request is for a new feature that would enhance functionality but does not impact current service."
+    },
+    "enrichment": {
+      "core_issue": "The customer is requesting a bulk export feature for audit logs to improve efficiency.",
+      "entities": [],
+      "urgency_signal": "low",
+      "summary": "The customer, a compliance-heavy organization, is suggesting the addition of a bulk export feature for audit logs. They believe this feature would save them significant time each month. This request should be considered for future development planning."
+    },
+    "routing": {
+      "queue": "Product",
+      "escalation_flag": false,
+      "escalation_reason": null
+    },
+    "metadata": {
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "pipeline_version": "1.0.0",
+      "processed_at": "2026-03-20T20:02:26.612222Z"
+    }
+  },
+  {
+    "input": {
+      "source": "Support Portal",
+      "message": "Invoice #8821 shows a charge of $1,240 but our contract rate is $980/month. Can someone look into this?"
+    },
+    "classification": {
+      "category": "Billing Issue",
+      "priority": "Medium",
+      "confidence": 0.9,
+      "reasoning": "The message indicates a billing discrepancy that affects the user's account."
+    },
+    "enrichment": {
+      "core_issue": "The invoice shows a charge that exceeds the agreed contract rate.",
+      "entities": [
+        "Invoice #8821",
+        "$1,240",
+        "$980"
+      ],
+      "urgency_signal": "normal",
+      "summary": "The customer is reporting a discrepancy in their invoice, where Invoice #8821 reflects a charge of $1,240 instead of the contracted rate of $980/month. They are requesting assistance to investigate this billing issue."
+    },
+    "routing": {
+      "queue": "Human Review",
+      "escalation_flag": true,
+      "escalation_reason": "Billing dispute exceeds $500"
+    },
+    "metadata": {
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "pipeline_version": "1.0.0",
+      "processed_at": "2026-03-20T20:02:30.388110Z"
+    }
+  },
+  {
+    "input": {
+      "source": "Email",
+      "message": "I'm not sure if this is the right place to ask, but is there a way to set up SSO with Okta? We're evaluating switching our auth provider."
+    },
+    "classification": {
+      "category": "Feature Request",
+      "priority": "Low",
+      "confidence": 0.85,
+      "reasoning": "The user is inquiring about a potential feature related to SSO integration, which does not indicate an immediate service impact."
+    },
+    "enrichment": {
+      "core_issue": "The customer is inquiring about setting up SSO with Okta as they are considering changing their authentication provider.",
+      "entities": [],
+      "urgency_signal": "low",
+      "summary": "The customer is exploring the possibility of integrating SSO with Okta. They are currently evaluating a switch in their authentication provider, so this request is not urgent but may be important for their decision-making process."
+    },
+    "routing": {
+      "queue": "Product",
+      "escalation_flag": false,
+      "escalation_reason": null
+    },
+    "metadata": {
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "pipeline_version": "1.0.0",
+      "processed_at": "2026-03-20T20:02:35.480783Z"
+    }
+  },
+  {
+    "input": {
+      "source": "Web Form",
+      "message": "Your dashboard stopped loading for us around 2pm EST. Checked our end \u2014 it's definitely on yours. Multiple users affected."
+    },
+    "classification": {
+      "category": "Incident/Outage",
+      "priority": "High",
+      "confidence": 0.95,
+      "reasoning": "The message indicates a service outage affecting multiple users, which is a high-priority issue."
+    },
+    "enrichment": {
+      "core_issue": "The dashboard stopped loading for multiple users around 2pm EST.",
+      "entities": [
+        "2pm EST"
+      ],
+      "urgency_signal": "high",
+      "summary": "There is an incident affecting multiple users who are unable to load the dashboard. The issue was reported to have started around 2pm EST and is confirmed to be on the platform's end."
+    },
+    "routing": {
+      "queue": "Human Review",
+      "escalation_flag": true,
+      "escalation_reason": "Escalation keyword detected"
+    },
+    "metadata": {
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "pipeline_version": "1.0.0",
+      "processed_at": "2026-03-20T20:02:39.863647Z"
+    }
+  }
+]

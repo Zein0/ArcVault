@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install:*)",
+      "Bash(python -m pytest tests/ -v)",
+      "Bash(where python:*)",
+      "Bash(python -m pip install -r requirements.txt -q)",
+      "Bash(python -m pytest tests/ -v --tb=short)",
+      "Bash(python -m ruff check . --fix)",
+      "Skill(update-config)",
+      "Bash(python .claude/scripts/git_commit_guard.py)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(jq -e '.hooks.PreToolUse[] | select\\(.matcher == \"\"Bash\"\"\\) | .hooks[] | select\\(.type == \"\"command\"\"\\) | .command' .claude/settings.json)",
+      "Bash(python:*)"
+    ]
+  }
+}

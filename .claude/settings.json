@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-sequential-thinking"]
+    }
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/scripts/git_commit_guard.py",
+            "timeout": 60,
+            "statusMessage": "Running pre-commit checks..."
+          }
+        ]
+      }
+    ]
+  }
+}
