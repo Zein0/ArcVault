@@ -6,6 +6,7 @@ _PROMPT_PATH = os.path.join(os.path.dirname(__file__), "prompts", "classify.txt"
 
 
 def _load_prompt() -> str:
+    """Read the classification system prompt from disk."""
     with open(_PROMPT_PATH) as f:
         return f.read()
 
@@ -27,6 +28,7 @@ def normalise_priority(raw: str) -> str:
 
 
 def classify(message: str, client: LLMClient) -> dict:
+    """Call the LLM to classify a message; validate and return normalised result."""
     prompt = _load_prompt()
     result = client.chat_json(prompt, message)
 

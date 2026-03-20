@@ -7,11 +7,13 @@ _VALID_URGENCY = {"critical", "high", "normal", "low"}
 
 
 def _load_prompt() -> str:
+    """Read the enrichment system prompt from disk."""
     with open(_PROMPT_PATH) as f:
         return f.read()
 
 
 def enrich(message: str, classification: dict, client: LLMClient) -> dict:
+    """Call the LLM to extract entities and generate a team-facing summary."""
     prompt = _load_prompt()
     user_content = (
         f"Message: {message}\n\n"

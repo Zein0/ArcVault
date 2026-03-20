@@ -22,11 +22,13 @@ def _extract_dollar_amounts(text: str) -> list[float]:
 
 
 def _check_keyword_escalation(message: str) -> bool:
+    """Return True if the message contains any escalation keyword."""
     lower = message.lower()
     return any(kw in lower for kw in ESCALATION_KEYWORDS)
 
 
 def _check_billing_escalation(message: str, category: str) -> bool:
+    """Return True if category is Billing Issue and any extracted amount exceeds the threshold."""
     if category != "Billing Issue":
         return False
     amounts = _extract_dollar_amounts(message)

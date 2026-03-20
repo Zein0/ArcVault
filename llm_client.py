@@ -12,6 +12,7 @@ from config import (
 
 class LLMClient:
     def __init__(self):
+        """Initialise the OpenAI-compatible client based on LLM_PROVIDER env var."""
         if LLM_PROVIDER == "ollama":
             self._client = OpenAI(
                 base_url=f"{OLLAMA_BASE_URL}/v1",
