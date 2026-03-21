@@ -112,13 +112,13 @@ Respond with ONLY valid JSON — no markdown, no explanation:
 
 **`urgency_signal` is separate from `priority`.** Priority comes from the classification step (Low/Medium/High). `urgency_signal` is the enrichment step's independent read of the urgency language in the message (critical/high/normal/low). Having both lets the routing logic use whichever is more conservative. In practice, they agree most of the time — when they disagree, the classification priority takes precedence.
 
-**Entity extraction is untyped.** The prompt asks for "any identifiers, error codes, dollar amounts, dates, usernames, or URLs". The entities list is a flat array of strings. This is intentional for v1 — it works well enough and avoids complex nested schemas. A production system would type-annotate entities (`{"type": "error_code", "value": "403"}`) for downstream query-ability.
+**Entity extraction is typed.** Each entity is returned as a structured object with `type` and `value` fields. Supported types include: `account_id`, `invoice_number`, `error_code`, `amount`, `contract_rate`, `date`, `username`, `url`, `service`, `feature`, `other`. This makes entities directly usable by downstream systems without parsing free text — a billing system can filter on `type: amount` immediately. The enricher validates the format and falls back to `{"type": "other", "value": "..."}` if the LLM returns a plain string.
 
 **Summary is audience-aware.** The instruction "written for the team who will handle this ticket" nudges the model toward practical, actionable language rather than just restating the message. In practice this works well for Billing and Engineering tickets.
 
 ### Known Weaknesses
 
-**Entity extraction misses some formats.** The model reliably extracts obvious entities (invoice numbers, error codes, URLs). It sometimes misses implicit entities like relative dates ("last Tuesday") or partial version strings. `router.py` has its own regex dollar extractor that is more reliable than the LLM for billing amounts — this is intentional defence-in-depth.
+**Entity extraction misses implicit formats.** The model reliably extracts explicit entities (invoice numbers, error codes, dollar amounts). It sometimes misses implicit references like relative dates ("last Tuesday") or partial version strings. `router.py` has its own regex dollar extractor that is more reliable than the LLM for billing amounts — this is intentional defence-in-depth.
 
 **`urgency_signal` calibration.** Similar to confidence, the model's urgency assessments are not well-calibrated. "Critical" is rare; most messages come back "normal" or "high". The signal is useful as a soft hint to the receiving team but shouldn't be used for hard routing decisions.
 
@@ -126,7 +126,6 @@ Respond with ONLY valid JSON — no markdown, no explanation:
 
 ### What I'd Improve With More Time
 
-- Type-annotate entities: `[{"type": "error_code", "value": "403"}, ...]`
 - Add audience-specific instructions per category (e.g., "For Billing tickets, always state the disputed amount and contract rate")
 - Use `max_tokens` to bound summary length
 - Add a `suggested_action` field: one-line recommendation for the receiving agent
