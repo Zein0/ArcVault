@@ -27,9 +27,17 @@ def enrich(message: str, classification: dict, client: LLMClient) -> dict:
     if urgency not in _VALID_URGENCY:
         urgency = "normal"
 
+    raw_entities = result.get("entities", [])
+    entities = [
+        e if isinstance(e, dict) and "type" in e and "value" in e
+        else {"type": "other", "value": str(e)}
+        for e in raw_entities
+        if e
+    ]
+
     return {
         "core_issue": result.get("core_issue", ""),
-        "entities": result.get("entities", []),
+        "entities": entities,
         "urgency_signal": urgency,
         "summary": result.get("summary", ""),
     }
